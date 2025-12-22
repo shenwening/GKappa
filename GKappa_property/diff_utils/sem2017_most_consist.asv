@@ -1,0 +1,155 @@
+
+% 计算 sem2017 数据集中 b 和 C 的一致性
+% 如果 sem2017 二尺度和五尺度结果一致，则认为 B 和 C 结果一致
+addpath('D:\matlibprojects\tmpOC_new')
+
+addpath(strcat('..\utils\'));
+bool_first = true;
+metricNames = get_metricNames(1)
+% 随机抽样数量
+sample_size =1000;
+% 重复次数
+num_iters = 1;
+%类别开始范围
+category_start = 1;
+%类别结束范围
+category_end = 5;
+%选择扰动方式  1  2 3 4 5
+perturb_method = 1;
+pertub_method_string=["most_frequent","random_category","circular_increment","circular_shift","random_average"];
+  % 2     2     4     3     2     2     3     3     2     3
+  %3     3     5     4     3     3     4     4     3     4
+%扰动范围数组
+perturb_range = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,1];
+
+for perturb_method = 3:3
+    outputFilePath = sprintf('D:\\matlibprojects\\tmpOC_new\\property_test\\data\\real\\diff\\sem_2017_C_A_Synthetic_%s_%d_num%d.xlsx',pertub_method_string(perturb_method) ,sample_size, num_iters);
+    % folder_path = strcat('../data/sem_2017_C/raw/sem2017_english_A_C_merged.xlsx');
+    folder_path = strcat(' D:\matlibprojects\tmpOC_new\property_test\data\sem_2017_C\data\BB_twtr_c_output.xlsx');
+
+    gold_data=read_excel_first_two_columns(folder_path);
+    num_files=length(perturb_range)
+
+    all_data = zeros(1, length(metricNames));
+    %所有的测试数据集
+    k=0;
+
+    for iter = 1:num_iters
+        %抽取出随机的测试数据
+        rand_indices = randperm(length(gold_data(:, 2)), sample_size);
+        gold_3_lable=gold_data(rand_indices, 1);
+        gold_5_lable=gold_data(rand_indices, 2);
+        all_test_data=zeros(sample_size, length(perturb_range));
+
+        for i = 1:length(perturb_range)
+            if perturb_method == 1
+                perturbed_data = perturb_to_most_frequent(gold_5_lable, perturb_range(i));
+            elseif perturb_method == 2
+                perturbed_data = perturb_to_random_category(gold_5_lable, perturb_range(i), category_start,category_end);
+            elseif perturb_method == 3
+                perturbed_data = perturb_by_circular_increment(gold_5_lable, perturb_range(i), category_start,category_end);
+            elseif perturb_method == 4
+                perturbed_data = perturb_by_circular_shift(gold_5_lable, perturb_range(i), category_start,category_end,3);
+            elseif perturb_method == 5
+                perturbed_data = perturb_by_random_average(gold_3_lable, perturb_range(i),category_start,category_end);
+            else
+                error('无效的扰动方法');
+            end
+            all_test_data(:, i) = perturbed_data;
+        end
+        % 获取文件数据
+
+        disp(['迭代次数: ', num2str(iter)]);
+        % 并行化外层循环
+        for  i = 1:num_files
+            i;
+            for j = i+1:num_files
+                % 计算测试值
+                value_a_3_3 = get_test_value_diff_m_data(all_test_data(:, i), gold_5_lable, 1, 5, 1, 5, 1);
+                value_a_5_3 = get_test_value_diff_m_data(all_test_data(:, i),gold_3_lable,  1, 5, 1, 3, 1);
+                value_b_3_3 = get_test_value_diff_m_data(all_test_data(:, j), gold_5_lable, 1, 5, 1, 5, 1);
+                value_b_5_3 = get_test_value_diff_m_data(all_test_data(:, j),gold_3_lable,  1, 5, 1, 3, 1);
+
+                % 更新 all_data
+                local_all_data = zeros(1, length(metricNames));
+                for m = 1:length(metricNames)
+                    flag = 0;
+                    if value_a_3_3(m) >= value_b_3_3(m)
+                        if value_a_5_3(m) >= value_b_5_3(m)
+                            local_all_data(m) = local_all_data(m) + 1;
+                            flag =1;
+                        end
+                    elseif value_a_3_3(m) < value_b_3_3(m)
+                        if value_a_5_3(m) < value_b_5_3(m)
+                            local_all_data(m) = local_all_data(m) + 1;
+                            flag =1;
+                        end
+                    end
+                    if m==15 && flag==0
+                        disp("不符合的数据")
+                        a_5_5=value_a_3_3(15)
+                       a_5_3= value_a_5_3(15)
+                        b_5_5=value_b_3_3(15)
+                        b_5_3=value_b_5_3(15)
+                        CMa_5 = CM_GK(all_test_data(:, i),  gold_5_lable, 1, 5, 1, 5)
+                        CMa_3= CM_GK(all_test_data(:, i),gold_3_lable,  1, 5, 1, 3)
+                        CMb_5 = CM_GK(all_test_data(:, j), gold_5_lable, 1, 5, 1, 5)
+                        CMb_3 = CM_GK(all_test_data(:, j),gold_3_lable,  1, 5, 1, 3)
+                        % fprintf("sampled_A = %s\n", mat2str(sampled_A'));
+                        % fprintf("sampled_B = %s\n", mat2str(sampled_B'));
+                        % fprintf("sampled_gold_2_frist = %s\n", mat2str(sampled_gold_2_frist'));
+                        % fprintf("sampled_gold_5_frist = %s\n", mat2str(sampled_gold_5_frist'));
+                        % fprintf("sampled_gold_2_second = %s\n", mat2str(sampled_gold_2_second'));
+                        % fprintf("sampled_gold_5_second = %s\n", mat2str(sampled_gold_5_second'));
+                    end
+                end
+                % 累加结果
+                all_data = all_data + local_all_data;
+                k = k + 1;
+            end
+        end
+    end
+
+    % 计算 all_data_num
+    metricNames
+    all_data_num = all_data / k
+
+    % 写入结果
+    if bool_first
+        writecell(metricNames, outputFilePath, 'WriteMode', 'overwrite');
+    end
+    writematrix(all_data, outputFilePath, 'WriteMode', 'append');
+    writematrix(all_data_num, outputFilePath, 'WriteMode', 'append');
+
+end
+
+function CM = CM_GK( x,y,b1,e1,b2,e2 )
+CM = zeros(e1,e2);
+s = length(x);
+for i=1:s
+    CM(x(i),y(i)) = CM(x(i),y(i)) + 1;
+end
+
+% CM = CM./sum(sum(CM(:)));
+end
+
+
+function data = read_excel_first_two_columns(filePath)
+    % 读取Excel表格的前两列数据
+    % 输入:
+    %   filePath - Excel文件的路径
+    % 输出:
+    %   data - 包含前两列数据的矩阵
+
+    % 检查文件是否存在
+    if ~isfile(filePath)
+        error('文件不存在: %s', filePath);
+    end
+
+    % 读取Excel文件的前两列数据
+    try
+        data = readmatrix(filePath, 'Range', 'B:B');
+    catch ME
+        error('读取Excel文件失败: %s', ME.message);
+    end
+end

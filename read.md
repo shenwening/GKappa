@@ -1,0 +1,6 @@
+
+This paper generalizes the ordinal classification agreement measure, Cohen’s weighted Kappa, by introducing a novel generalized agreement coefficient, GKappa. This coefficient is highly flexible and can be applied to assess agreement across different ordinal scales, while naturally reducing to the classical linearly weighted Kappa under the same scale. The study systematically examines the fundamental properties that an effective ordinal agreement measure should satisfy. Through simulation experiments, the monotonicity of GKappa across cross-ordinal scales is thoroughly validated. Experimental results demonstrate that GKappa exhibits strong stability and sensitivity in monotonicity tests, accurately reflecting trends in agreement across varying scales. Furthermore, its application to real-world datasets confirms the superior performance of GKappa in practical scenarios, highlighting its potential and utility as a general-purpose metric for evaluating inter-rater agreement.
+
+utils 存放工具函数
+metrics 论文中的适用的评价指标
+GKappa_property 论文中的性质实验代码
