@@ -1,5 +1,5 @@
-
-addpath('D:\matlibprojects\tmpOC_new')
+addpath("../utils/")
+addpath("../metrics/")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Simulated data set stability experiment-GK
 

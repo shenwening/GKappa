@@ -1,3 +1,5 @@
+addpath("../utils/")
+addpath("../metrics/")
 %%% 1. Environment initialization and path configuration
 %clear; clc; close all; % clear variables/command line/close old figures to avoid interference
 %addpath("utils\"); % Add tool function path

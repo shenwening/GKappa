@@ -1,5 +1,5 @@
-addpath("utils\")
-addpath("D:\matlibprojects\tmpOC_new")
+addpath("../utils/")
+addpath("../metrics/")
 metricNames=get_metricNames(1);
 metricNames
 bool_first=true;

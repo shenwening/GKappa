@@ -1,5 +1,6 @@
-addpath('D:\matlibprojects\tmpOC_new')
-outputFilePath = "D:\matlibprojects\tmpOC_new\property_test\data\diff\test_value_01.xlsx";
+addpath("../utils/")
+addpath("../metrics/")
+outputFilePath = "data\diff\test_value_01.xlsx";
 addpath('utils\');
 bool_first=true
 metricNames=get_metricNames(5);

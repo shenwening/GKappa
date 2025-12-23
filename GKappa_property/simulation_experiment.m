@@ -1,5 +1,5 @@
-addpath('D:\matlibprojects\tmpOC_new')
-addpath('..\utils\');
+addpath("../utils/")
+addpath("../metrics/")
 % outputFilePath = "data\sim\test_value_sim_rho_c_50.xlsx";
 % outputFilePath = "data\sim\test_value_sim_rho_c_20.xlsx";
 % outputFilePath = "data\sim\test_value_sim_rho_c_90.xlsx";

@@ -1,5 +1,5 @@
-addpath("utils\")
-addpath("D:\matlibprojects\tmpOC_new")
+addpath("../utils/")
+addpath("../metrics/")
 outputFilePath = "data\gk\rel_proprty_1.xlsx";
 bool_first=true;
 

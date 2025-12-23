@@ -1,3 +1,5 @@
+addpath("../utils/")
+addpath("../metrics/")
 clear; clc; close all;
 %Read Excel file
  % [~, ~, raw] = xlsread('data\sim\test_value_sim_rho_c_10_90.xlsx');

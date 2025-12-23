@@ -1,3 +1,5 @@
+addpath("../utils/")
+addpath("../metrics/")
 % clear; clc; close all;
 % 
 %% ================== Data file ==================

@@ -1,4 +1,5 @@
-
+addpath("../utils/")
+addpath("../metrics/")
 function [trueLabels, predictedLabels] = extractSequencesFromConfusion(confMat)
 %Extract the simulated original sequence from the confusion matrix
 %Note: Since the confusion matrix is ​​a statistical result, the original sequence cannot be completely restored.

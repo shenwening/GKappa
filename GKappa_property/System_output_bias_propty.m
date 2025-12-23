@@ -1,4 +1,5 @@
-addpath('D:\matlibprojects\tmpOC_new')
+addpath("../utils/")
+addpath("../metrics/")
 outputFilePath = "D:\matlibprojects\tmpOC_new\property_test\data\gk_pro\input_bias_sample1.xlsx";
 addpath('utils\');
 bool_first=true;

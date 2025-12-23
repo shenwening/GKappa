@@ -1,6 +1,6 @@
-addpath("utils\")
-addpath("D:\matlibprojects\tmpOC_new")
-outputFilePath = "D:\matlibprojects\tmpOC_new\property_test\data\gk_pro\IOI_proprty.xlsx";
+addpath("../utils/")
+addpath("../metrics/")
+outputFilePath = "data\gk_pro\IOI_proprty.xlsx";
 bool_first=true;
 
 a = [1 3 5 7]';

@@ -1,4 +1,5 @@
-addpath("D:\matlibprojects\tmpOC_new")
+addpath("../utils/")
+addpath("../metrics/")
 
 %---------------------------------------Monotonicity test written by senior sister---------------------------
 %% define sequence
